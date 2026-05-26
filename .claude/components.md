@@ -76,4 +76,36 @@ bg-[#C6FF3B]    ← Electric Lime (primary button)
 ```
 
 ## Portal Components
-_To be defined — device registratie, venue beheer, dashboard._
+
+### DataTable (src/components/portal/DataTable.tsx)
+Herbruikbare tabel voor alle overzichtspagina's in het portal. Verplicht te gebruiken voor elke tabel met meer dan 2 kolommen.
+
+**Features:**
+- Zoeken per kolom (filter input per kolom-header)
+- Kolommen aan/uitzetten via een kolommenkiezer (⚙ knop)
+- Kolomvolgorde aanpassen via omhoog/omlaag knoppen in de kolommenkiezer
+- Voorkeur wordt opgeslagen in `localStorage` per tabel-ID
+
+**Gebruik:**
+```tsx
+<DataTable
+  id="klanten"              // unieke sleutel voor localStorage
+  columns={[
+    { key: 'bedrijfsnaam', label: 'Bedrijf', defaultVisible: true },
+    { key: 'plaats', label: 'Plaats', defaultVisible: true },
+    { key: 'contactNaam', label: 'Contact', defaultVisible: true },
+    { key: 'kvk', label: 'KVK', defaultVisible: false },
+    { key: 'status', label: 'Status', defaultVisible: true },
+  ]}
+  rows={tenants}
+  renderCell={(row, key) => { /* custom render per kolom */ }}
+  actions={(row) => <Link href={...}>Beheren →</Link>}
+/>
+```
+
+**Regels:**
+- Elke nieuwe tabel in het portal gebruikt DataTable
+- `id` prop is verplicht en uniek per pagina (voor localStorage)
+- Standaard zichtbare kolommen via `defaultVisible: true`
+- Zoekfilter werkt op de string-waarde van `renderCell` output
+
