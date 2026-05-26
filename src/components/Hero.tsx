@@ -7,7 +7,7 @@ import { useTranslation } from '@/lib/i18n/LanguageContext';
 const guestColors = ['#a78bfa', '#60a5fa', '#f472b6', '#34d399'];
 const guestAngles = [-130, -50, 50, 130];
 const guestNames = ['Anna', 'Mike', 'Sara', 'Tom'];
-const guestAmounts = ['€8,50', '€12,00', '€9,25', '€6,75'];
+const guestAmounts = ['€8,50', '€10,00', '€7,50', '€6,50'];
 
 const STEP_DURATION = 4000;
 
@@ -33,7 +33,7 @@ function HeroAnimation() {
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  const total = '€36,50';
+  const total = '€32,50';
   const terminalState = phase === 'paying' ? 'paid' : paidCount > 0 ? 'active' : 'idle';
 
   return (
