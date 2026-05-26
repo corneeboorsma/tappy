@@ -1,0 +1,25 @@
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@700,500,400&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #0D1117;
+  --foreground: #F5F7FA;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-midnight: #0D1117;
+  --color-soft-white: #F5F7FA;
+  --color-lime: #C6FF3B;
+  --color-graphite: #1E242D;
+  --color-slate: #8B949E;
+  --font-sans: 'Satoshi', 'Inter', sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Satoshi', 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
