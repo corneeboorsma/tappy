@@ -3,8 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTranslation } from '@/lib/i18n/LanguageContext';
 
-const benefitIcons = ['🎯', '⚡', '🪑', '💚', '🚫', '📊', '🔄', '🤝'];
-
 export default function Footer() {
   const { t } = useTranslation();
 

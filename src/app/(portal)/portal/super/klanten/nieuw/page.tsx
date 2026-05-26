@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase/client';
 import { createTenant, createPortalUser } from '@/lib/firebase/firestore';
@@ -30,7 +29,6 @@ const empty: FormData = {
 };
 
 export default function NieuweKlantPage() {
-  const router = useRouter();
   const [form, setForm] = useState<FormData>(empty);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');

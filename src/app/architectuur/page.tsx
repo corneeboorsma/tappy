@@ -252,7 +252,7 @@ export default function ArchitectuurPage() {
 
         {/* Pages */}
         <div className="mb-16">
-          <p className="text-xs font-semibold tracking-widest text-[#C6FF3B] uppercase mb-6">Pagina's & routes</p>
+          <p className="text-xs font-semibold tracking-widest text-[#C6FF3B] uppercase mb-6">Pagina&apos;s &amp; routes</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {pages.map((p) => (
               <div key={p.route} className="bg-[#1E242D] rounded-2xl p-6 border border-white/5">

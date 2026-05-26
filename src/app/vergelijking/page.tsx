@@ -269,7 +269,7 @@ export default function VergelijkingPage() {
               Alle drie de concurrenten opereren op hetzelfde model: een medewerker brengt hardware naar de klant. Dat is het model van 1990. Niemand heeft een product gebouwd dat <em className="text-white not-italic">op tafel staat en wacht op de gast</em>.
             </p>
             <p className="text-[#8B949E] leading-relaxed mb-4">
-              Het meest vergelijkbare product van Adyen is hun "Unattended" categorie — maar dat zijn grote kiosken voor supermarkten en parkeergarages. Niet een compact, stijlvol device op een barkruk in Amsterdam.
+              Het meest vergelijkbare product van Adyen is hun &quot;Unattended&quot; categorie — maar dat zijn grote kiosken voor supermarkten en parkeergarages. Niet een compact, stijlvol device op een barkruk in Amsterdam.
             </p>
             <p className="text-white font-medium leading-relaxed">
               Tappy speelt in een categorie die niet bestaat. Dat is de kans.
