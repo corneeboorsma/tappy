@@ -81,6 +81,8 @@ export default function KlantDetailPage() {
     await load();
   }
 
+  const [assignFilter, setAssignFilter] = useState('');
+
   async function handleBulkAssign() {
     if (selectedIds.size === 0) return;
     setAssigning(true);
@@ -224,7 +226,7 @@ export default function KlantDetailPage() {
         <div className="flex flex-col gap-4">
           <div className="flex justify-end">
             <button
-              onClick={() => { setSelectedIds(new Set()); setShowAssignModal(true); }}
+              onClick={() => { setSelectedIds(new Set()); setAssignFilter(''); setShowAssignModal(true); }}
               className="bg-[#C6FF3B] text-[#0D1117] font-bold px-5 py-2.5 rounded-xl hover:bg-[#d4ff5a] transition-colors text-sm"
             >
               + Terminals toewijzen
@@ -376,6 +378,19 @@ export default function KlantDetailPage() {
               <button onClick={() => setShowAssignModal(false)} className="text-[#8B949E] hover:text-white text-lg leading-none">✕</button>
             </div>
 
+            {availableTerminals.length > 0 && (
+              <div className="px-4 py-3 border-b border-white/5">
+                <input
+                  type="text"
+                  value={assignFilter}
+                  onChange={e => setAssignFilter(e.target.value)}
+                  placeholder="Zoek op naam, serienummer of model..."
+                  autoFocus
+                  className="w-full bg-[#0D1117] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#C6FF3B]/50 transition-colors"
+                />
+              </div>
+            )}
+
             {availableTerminals.length === 0 ? (
               <div className="px-6 py-10 text-center text-[#8B949E] text-sm">
                 Alle terminals zijn al toegewezen.{' '}
@@ -395,7 +410,13 @@ export default function KlantDetailPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {availableTerminals.map(term => (
+                    {availableTerminals
+                      .filter(t => {
+                        if (!assignFilter) return true;
+                        const q = assignFilter.toLowerCase();
+                        return t.naam.toLowerCase().includes(q) || (t.serienummer ?? '').toLowerCase().includes(q) || (t.model ?? '').toLowerCase().includes(q);
+                      })
+                      .map(term => (
                       <tr key={term.id} onClick={() => toggleSelect(term.id)}
                         className={`border-b border-white/5 last:border-0 cursor-pointer transition-colors ${
                           selectedIds.has(term.id) ? 'bg-[#C6FF3B]/5' : 'hover:bg-white/[0.02]'
