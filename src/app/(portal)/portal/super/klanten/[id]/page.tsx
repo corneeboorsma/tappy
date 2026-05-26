@@ -493,7 +493,7 @@ const ASSUMED_AVG_TRANSACTION = 20;
 function OmzetTab({ tenant, terminals }: { tenant: Tenant; terminals: GlobalTerminal[] }) {
   const totalCount = terminals.length;
 
-  const vastPerMaand = terminals.reduce((sum, t) => sum + (t.bedrag ?? 0), 0);
+  const vastPerMaand = terminals.reduce((sum, t) => sum + (t.bedrag > 0 ? t.bedrag : tenant.pricing.vastPerTerminal), 0);
   const transactiesOmzet = ASSUMED_TRANSACTIONS_PER_MONTH * ASSUMED_AVG_TRANSACTION;
   const transactieKosten = transactiesOmzet * (tenant.pricing.transactieTarief / 100);
   const totaalPerMaand = vastPerMaand + transactieKosten;
