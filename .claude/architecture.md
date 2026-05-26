@@ -10,20 +10,33 @@ src/
 │   │   ├── dashboard/
 │   │   ├── devices/
 │   │   └── venues/
-│   ├── layout.tsx            ← root layout
+│   ├── layout.tsx            ← root layout (wraps LanguageProvider)
 │   ├── page.tsx              ← homepage
+│   ├── not-found.tsx         ← 404 pagina
 │   └── globals.css
 ├── components/               ← herbruikbare UI componenten
-│   ├── Navbar.tsx
-│   ├── Hero.tsx
-│   ├── SocialProof.tsx
-│   ├── Features.tsx
-│   ├── HowItWorks.tsx
-│   └── Footer.tsx
+│   ├── Navbar.tsx            ← logo (PNG), nav links, EN/NL toggle, Login, Get started
+│   ├── Hero.tsx              ← hero foto + tekst links + HeroAnimation rechts
+│   ├── Features.tsx          ← 3 feature cards met echte foto's
+│   ├── HowItWorks.tsx        ← geanimeerde flow (POS + Standalone), benefits grid
+│   ├── TappyTerminal.tsx     ← SVG device component (idle/active/paid states)
+│   ├── Footer.tsx            ← kolommen, email signup, logo, copyright
+│   └── SocialProof.tsx       ← niet gebruikt op homepage
 └── lib/
-    └── firebase.ts           ← Firebase initialisatie
+    ├── firebase.ts           ← Firebase initialisatie
+    └── i18n/
+        ├── en.ts             ← Engelse vertaalstrings (type-definitie)
+        ├── nl.ts             ← Nederlandse vertaalstrings
+        └── LanguageContext.tsx ← LanguageProvider + useTranslation hook
 public/
-└── images/                   ← hero-bar.jpg, tappy-device.png
+└── images/
+    ├── hero-bar.jpg              ← top-panel van marble bar collage (hero achtergrond)
+    ├── tappy-device.png          ← device render donkere achtergrond
+    ├── tappy-device-workflow.png ← device PNG transparante achtergrond
+    ├── tappy-logo-dark.png       ← wit wordmark + lime waves, transparant
+    ├── feature-payments.jpg      ← card tapping Tappy
+    ├── feature-insights.jpg      ← dashboard op telefoon
+    └── feature-teams.jpg         ← barman met Tappy op bar
 assets/
 └── logo/
     ├── tappy-logo-dark.png
@@ -38,6 +51,14 @@ assets/
 ## Route Groups
 - `(marketing)` — geen auth vereist, publiek
 - `(portal)` — Firebase Auth vereist, admin gebruik
+
+## i18n Pattern
+Alle componenten gebruiken `useTranslation()`:
+```tsx
+const { t, locale, setLocale } = useTranslation();
+// t.nav.login, t.hero.cta1, t.features.items[0].title, etc.
+```
+Strings nooit hardcoden in componenten — altijd via `t.*`.
 
 ## Environment Variables
 Sla op in `.env.local`:

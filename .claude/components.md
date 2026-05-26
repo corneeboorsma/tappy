@@ -3,12 +3,40 @@
 ## Marketing Site
 | Component | Beschrijving |
 |---|---|
-| `Navbar` | Fixed top nav, logo, links, Login + Get started CTA |
-| `Hero` | Fullscreen hero met headline, CTAs, trust bar, device foto |
-| `SocialProof` | Partner logo's balk (Heineken, Feyenoord, etc.) |
-| `Features` | 3 feature cards — payments, insights, teams |
-| `HowItWorks` | 3-stappen uitleg — Tap, Pay, Done |
-| `Footer` | Links kolommen + email signup + copyright |
+| `Navbar` | Fixed top nav, logo (PNG), links, EN/NL taalwisselaar, Login + Get started CTA |
+| `Hero` | 70vh hero met achtergrond foto, tekst links, `HeroAnimation` rechts (verborgen op mobiel) |
+| `Features` | 3 feature cards met echte foto's bovenaan — payments, insights, teams |
+| `HowItWorks` | Geanimeerde flow (POS + Standalone), stap-omschrijvingen, benefits grid (8 items) |
+| `TappyTerminal` | SVG device component — pillow-shaped cube plat op tafel, scherm naar boven |
+| `Footer` | Kolommen, email signup, logo (PNG), copyright |
+| `SocialProof` | Aangemaakt maar niet actief op homepage |
+
+## TappyTerminal Props
+```tsx
+<TappyTerminal
+  size="sm" | "md" | "lg"   // sm=64px, md=100px, lg=160px base
+  state="idle" | "active" | "paid"
+  amount="€32,50"           // optioneel, getoond op scherm
+/>
+```
+States: idle = scherm grijs/klaar, active = pulse rings + LED aan, paid = groen scherm + ✓
+
+## HeroAnimation
+Rechts in de hero — 4 gasten betalen elk hun deel (€8,50 / €10,00 / €7,50 / €6,50 = €32,50 totaal), dan fase 2: Tappy toont "Paid!". Loopt in een lus van 4s + 4s.
+
+## i18n
+Elk component gebruikt `useTranslation()`:
+```tsx
+const { t } = useTranslation();
+// gebruik t.nav.login, t.hero.cta1, etc.
+```
+Nooit tekst hardcoden — altijd via de vertaalbestanden in `src/lib/i18n/`.
+
+## Logo
+Altijd `<Image src="/images/tappy-logo-dark.png" />` gebruiken — nooit tekst `tappy))`.
+- Navbar: width=96, height=27
+- Footer: width=80, height=23
+- TappyTerminal front face: geschaald op basis van `base`
 
 ## Design Tokens (Tailwind klassen)
 ```
