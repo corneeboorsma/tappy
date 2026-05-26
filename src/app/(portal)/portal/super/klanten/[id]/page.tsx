@@ -458,10 +458,9 @@ const ASSUMED_TRANSACTIONS_PER_MONTH = 1000;
 const ASSUMED_AVG_TRANSACTION = 20;
 
 function OmzetTab({ tenant, terminals }: { tenant: Tenant; terminals: GlobalTerminal[] }) {
-  const activeCount = terminals.filter(t => t.status === 'active').length;
   const totalCount = terminals.length;
 
-  const vastPerMaand = activeCount * tenant.pricing.vastPerTerminal;
+  const vastPerMaand = terminals.reduce((sum, t) => sum + (t.bedrag ?? 0), 0);
   const transactiesOmzet = ASSUMED_TRANSACTIONS_PER_MONTH * ASSUMED_AVG_TRANSACTION;
   const transactieKosten = transactiesOmzet * (tenant.pricing.transactieTarief / 100);
   const totaalPerMaand = vastPerMaand + transactieKosten;
@@ -490,7 +489,7 @@ function OmzetTab({ tenant, terminals }: { tenant: Tenant; terminals: GlobalTerm
         <div className="bg-[#1E242D] rounded-2xl p-5 border border-white/5">
           <p className="text-xs text-[#8B949E] uppercase tracking-wide mb-2">Vast (maandelijks)</p>
           <p className="text-2xl font-bold text-white">{fmt(vastPerMaand)}</p>
-          <p className="text-xs text-[#8B949E] mt-1">{activeCount}/{totalCount} actieve terminals × {fmt(tenant.pricing.vastPerTerminal)}</p>
+          <p className="text-xs text-[#8B949E] mt-1">{totalCount} terminal{totalCount !== 1 ? 's' : ''} · som van vaste bedragen</p>
         </div>
         <div className="bg-[#1E242D] rounded-2xl p-5 border border-white/5">
           <p className="text-xs text-[#8B949E] uppercase tracking-wide mb-2">Transactiekosten</p>
