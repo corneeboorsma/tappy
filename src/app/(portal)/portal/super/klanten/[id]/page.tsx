@@ -306,7 +306,7 @@ export default function KlantDetailPage() {
                           selectedIds.has(term.id) ? 'bg-[#C6FF3B]/5' : 'hover:bg-white/[0.02]'
                         }`}>
                         <td className="px-4 py-3">
-                          <input type="checkbox" checked={selectedIds.has(term.id)} onChange={() => toggleSelect(term.id)}
+                          <input type="checkbox" checked={selectedIds.has(term.id)} onChange={() => toggleSelect(term.id)} onClick={e => e.stopPropagation()}
                             className="accent-[#C6FF3B] w-4 h-4 cursor-pointer" />
                         </td>
                         <td className="px-5 py-3 text-sm font-medium text-white">{term.naam}</td>

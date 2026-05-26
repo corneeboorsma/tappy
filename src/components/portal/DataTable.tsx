@@ -19,6 +19,18 @@ function storageKey(id: string) {
   return `tappy-table-${id}`;
 }
 
+function getSortValue(row: Record<string, unknown>, key: string): string {
+  const v = row[key];
+  if (v == null) return '';
+  if (typeof v === 'string') return v.toLowerCase();
+  if (typeof v === 'number') return String(v).padStart(20, '0');
+  // Firestore Timestamp
+  if (typeof v === 'object' && 'toDate' in (v as object)) {
+    return String((v as { toDate: () => Date }).toDate().getTime()).padStart(20, '0');
+  }
+  return String(v).toLowerCase();
+}
+
 export default function DataTable<T extends Record<string, unknown>>({
   id, columns, rows, renderCell, actions,
 }: DataTableProps<T>) {
@@ -28,6 +40,10 @@ export default function DataTable<T extends Record<string, unknown>>({
   const [order, setOrder] = useState<string[]>(() => columns.map(c => c.key));
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [showSettings, setShowSettings] = useState(false);
+  const [sortKey, setSortKey] = useState<string>(() =>
+    columns.find(c => c.defaultVisible !== false)?.key ?? columns[0]?.key ?? ''
+  );
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
 
   // Load preferences from localStorage
   useEffect(() => {
@@ -67,6 +83,15 @@ export default function DataTable<T extends Record<string, unknown>>({
     savePrefs(visibleKeys, next);
   }
 
+  function handleSortClick(key: string) {
+    if (sortKey === key) {
+      setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDir('asc');
+    }
+  }
+
   const orderedVisible = order
     .filter(k => visibleKeys.includes(k))
     .map(k => columns.find(c => c.key === k)!)
@@ -85,11 +110,19 @@ export default function DataTable<T extends Record<string, unknown>>({
     })
   );
 
+  // Sort rows
+  const sorted = [...filtered].sort((a, b) => {
+    const av = getSortValue(a, sortKey);
+    const bv = getSortValue(b, sortKey);
+    const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
   return (
     <div>
       {/* Toolbar */}
       <div className="flex justify-between items-center mb-3">
-        <span className="text-xs text-[#8B949E]">{filtered.length} resultaten</span>
+        <span className="text-xs text-[#8B949E]">{sorted.length} resultaten</span>
         <div className="relative">
           <button
             onClick={() => setShowSettings(v => !v)}
@@ -141,8 +174,16 @@ export default function DataTable<T extends Record<string, unknown>>({
             {/* Column headers */}
             <tr className="border-b border-white/5">
               {orderedVisible.map(col => (
-                <th key={col.key} className="text-left px-5 py-3 text-xs text-[#8B949E] uppercase tracking-wide font-medium">
-                  {col.label}
+                <th key={col.key}
+                  onClick={() => handleSortClick(col.key)}
+                  className="text-left px-5 py-3 text-xs text-[#8B949E] uppercase tracking-wide font-medium cursor-pointer select-none hover:text-white transition-colors group"
+                >
+                  <span className="inline-flex items-center gap-1.5">
+                    {col.label}
+                    <span className={`transition-opacity ${sortKey === col.key ? 'opacity-100 text-[#C6FF3B]' : 'opacity-0 group-hover:opacity-40'}`}>
+                      {sortKey === col.key && sortDir === 'desc' ? '↓' : '↑'}
+                    </span>
+                  </span>
                 </th>
               ))}
               {actions && <th className="px-5 py-3" />}
@@ -164,13 +205,13 @@ export default function DataTable<T extends Record<string, unknown>>({
             </tr>
           </thead>
           <tbody>
-            {filtered.length === 0 ? (
+            {sorted.length === 0 ? (
               <tr>
                 <td colSpan={orderedVisible.length + (actions ? 1 : 0)} className="px-5 py-10 text-center text-[#8B949E] text-sm">
                   Geen resultaten gevonden.
                 </td>
               </tr>
-            ) : filtered.map((row, i) => (
+            ) : sorted.map((row, i) => (
               <tr key={i} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors">
                 {orderedVisible.map(col => (
                   <td key={col.key} className="px-5 py-3 text-sm">
