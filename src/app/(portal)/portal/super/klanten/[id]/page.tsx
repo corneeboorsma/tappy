@@ -36,6 +36,8 @@ export default function KlantDetailPage() {
   const [newPassword, setNewPassword] = useState('');
   const [resetSaving, setResetSaving] = useState(false);
   const [resetMsg, setResetMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
+  const [userDisabled, setUserDisabled] = useState<boolean | null>(null);
+  const [toggleSaving, setToggleSaving] = useState(false);
 
   async function load() {
     const [t, terms, pu] = await Promise.all([
@@ -47,6 +49,14 @@ export default function KlantDetailPage() {
     setAllTerminals(terms);
     setPortalUser(pu);
     if (t) setLoginEmail(t.contactEmail ?? '');
+    if (pu) {
+      fetch(`/api/portal/user-status?uid=${pu.uid}`)
+        .then(r => r.json())
+        .then(d => setUserDisabled(d.disabled ?? false))
+        .catch(() => setUserDisabled(false));
+    } else {
+      setUserDisabled(null);
+    }
     setLoading(false);
   }
 
@@ -106,6 +116,19 @@ export default function KlantDetailPage() {
       if (next.has(termId)) { next.delete(termId); } else { next.add(termId); }
       return next;
     });
+  }
+
+  async function handleToggleDisabled() {
+    if (!portalUser || userDisabled === null) return;
+    setToggleSaving(true);
+    const newDisabled = !userDisabled;
+    const res = await fetch('/api/portal/toggle-user', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid: portalUser.uid, disabled: newDisabled }),
+    });
+    if (res.ok) setUserDisabled(newDisabled);
+    setToggleSaving(false);
   }
 
   async function handleCreateLogin(e: React.FormEvent) {
@@ -286,10 +309,20 @@ export default function KlantDetailPage() {
               <div className="bg-[#1E242D] rounded-2xl p-6 border border-white/5">
                 <h2 className="text-sm font-bold text-white mb-4">Huidig account</h2>
                 <div className="flex items-center gap-3 mb-1">
-                  <span className="text-xs bg-[#C6FF3B]/10 text-[#C6FF3B] border border-[#C6FF3B]/20 px-2.5 py-1 rounded-full font-semibold">Actief</span>
+                  <button
+                    onClick={handleToggleDisabled}
+                    disabled={toggleSaving || userDisabled === null}
+                    className={`text-xs font-semibold px-2.5 py-1 rounded-full border transition-colors disabled:opacity-50 ${
+                      userDisabled
+                        ? 'bg-red-500/10 text-red-400 border-red-500/20 hover:bg-[#C6FF3B]/10 hover:text-[#C6FF3B] hover:border-[#C6FF3B]/20'
+                        : 'bg-[#C6FF3B]/10 text-[#C6FF3B] border-[#C6FF3B]/20 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20'
+                    }`}>
+                    {toggleSaving ? '...' : userDisabled ? 'Geblokkeerd' : 'Actief'}
+                  </button>
                   <span className="text-sm text-white">{portalUser.email}</span>
                 </div>
                 <p className="text-xs text-[#8B949E] mt-2">UID: <span className="font-mono">{portalUser.uid}</span></p>
+                <p className="text-xs text-[#8B949E] mt-1">Klik op de status om de portaltoegang te blokkeren of deblokkeren — onafhankelijk van de klant-status.</p>
               </div>
 
               <section className="bg-[#1E242D] rounded-2xl p-6 border border-white/5">
