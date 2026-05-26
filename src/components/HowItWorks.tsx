@@ -1,55 +1,16 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import TappyTerminal from './TappyTerminal';
+import { useTranslation } from '@/lib/i18n/LanguageContext';
 
 type Mode = 'pos' | 'standalone';
 
-const benefits = [
-  {
-    icon: '🎯',
-    title: 'Guests are in control.',
-    desc: 'Everyone pays their own share, at their own pace. No awkward bill-splitting moments.',
-  },
-  {
-    icon: '⚡',
-    title: 'Less work for staff.',
-    desc: 'No more running bills, splitting checks, or chasing payments. Staff focuses on what matters.',
-  },
-  {
-    icon: '🪑',
-    title: 'More tables, same team.',
-    desc: 'One staff member can serve more tables when payments run themselves.',
-  },
-  {
-    icon: '💚',
-    title: 'Balance left = tip.',
-    desc: 'Any amount remaining on Tappy after the bill is paid goes directly to the venue as a tip.',
-  },
-  {
-    icon: '🚫',
-    title: 'No more dine & dash.',
-    desc: 'Payment is collected before guests leave. No unpaid bills, no uncomfortable confrontations.',
-  },
-  {
-    icon: '📊',
-    title: 'Real-time revenue insight.',
-    desc: 'See exactly what\'s been collected per table, per hour — live. No end-of-night surprises.',
-  },
-  {
-    icon: '🔄',
-    title: 'Faster table turnover.',
-    desc: 'Guests don\'t wait for the bill. When they\'re ready to leave, they tap and go. Table turns faster.',
-  },
-  {
-    icon: '🤝',
-    title: 'Works with any payment method.',
-    desc: 'Cards, phones, smartwatches — if it can tap, Tappy accepts it. No guest left fumbling.',
-  },
-];
+const benefitIcons = ['🎯', '⚡', '🪑', '💚', '🚫', '📊', '🔄', '🤝'];
 
 // --- Flow A: Connected to POS ---
 
 function FlowPOS({ step }: { step: number }) {
+  const { t } = useTranslation();
   const orders = ['🍺 Beer', '🍔 Burger', '🍷 Wine', '🥗 Salad'];
   const guests = [
     { name: 'Anna', paid: '€8.50' },
@@ -89,7 +50,7 @@ function FlowPOS({ step }: { step: number }) {
             ))}
           </div>
         </div>
-        <span className="text-[10px] text-[#8B949E] text-center">Guests order<br />food &amp; drinks</span>
+        <span className="text-[10px] text-[#8B949E] text-center">{t.howItWorks.pos.label1}</span>
       </div>
 
       <Arrow active={step >= 1} />
@@ -106,7 +67,7 @@ function FlowPOS({ step }: { step: number }) {
               </div>
               <div className="w-6 h-1 bg-white/10 rounded-full" />
             </div>
-            <span className="text-[9px] text-[#8B949E]">Cashier</span>
+            <span className="text-[9px] text-[#8B949E]">{t.howItWorks.standalone.guest}</span>
           </div>
 
           {/* Sync arrow */}
@@ -133,7 +94,7 @@ function FlowPOS({ step }: { step: number }) {
           {/* Tappy device */}
           <TappyDevice step={step} targetStep={1} finalStep={2} amount="€36.50" />
         </div>
-        <span className="text-[10px] text-[#8B949E] text-center">Bill updates on<br />Tappy automatically</span>
+        <span className="text-[10px] text-[#8B949E] text-center">{t.howItWorks.pos.label2}</span>
       </div>
 
       <Arrow active={step >= 2} />
@@ -162,7 +123,7 @@ function FlowPOS({ step }: { step: number }) {
             </div>
           ))}
         </div>
-        <span className="text-[10px] text-[#8B949E] text-center">Each pays their share<br />POS marked as paid ✓</span>
+        <span className="text-[10px] text-[#8B949E] text-center">{t.howItWorks.pos.label3}</span>
       </div>
     </div>
   );
@@ -171,9 +132,10 @@ function FlowPOS({ step }: { step: number }) {
 // --- Flow B: Standalone ---
 
 function FlowStandalone({ step }: { step: number }) {
+  const { t } = useTranslation();
   const rounds = [
-    { label: 'Round 1', items: ['🍺', '🍺', '🥤', '🍺'], total: '€18.00' },
-    { label: 'Round 2', items: ['🍺', '🍷', '🍺', '🥤'], total: '€22.00' },
+    { label: `${t.howItWorks.standalone.round} 1`, items: ['🍺', '🍺', '🥤', '🍺'], total: '€18.00' },
+    { label: `${t.howItWorks.standalone.round} 2`, items: ['🍺', '🍷', '🍺', '🥤'], total: '€22.00' },
   ];
   const guests = [
     { name: 'Anna', paid: '€10.00' },
@@ -205,7 +167,7 @@ function FlowStandalone({ step }: { step: number }) {
             </div>
           ))}
         </div>
-        <span className="text-[10px] text-[#8B949E] text-center">Group orders<br />multiple rounds</span>
+        <span className="text-[10px] text-[#8B949E] text-center">{t.howItWorks.standalone.label1}</span>
       </div>
 
       <Arrow active={step >= 1} />
@@ -236,7 +198,7 @@ function FlowStandalone({ step }: { step: number }) {
             ))}
           </div>
         </div>
-        <span className="text-[10px] text-[#8B949E] text-center">Everyone pays<br />as they go</span>
+        <span className="text-[10px] text-[#8B949E] text-center">{t.howItWorks.standalone.label2}</span>
       </div>
 
       <Arrow active={step >= 2} />
@@ -254,7 +216,7 @@ function FlowStandalone({ step }: { step: number }) {
               <div className="w-10 h-10 rounded-full border-2 border-[#C6FF3B] bg-[#C6FF3B]/10 flex items-center justify-center text-lg">
                 🚶
               </div>
-              <span className="text-[9px] text-[#8B949E]">Guest</span>
+              <span className="text-[9px] text-[#8B949E]">{t.howItWorks.standalone.guest}</span>
             </div>
             {/* Arrow */}
             <div className="text-[#C6FF3B] text-sm mb-3">→</div>
@@ -266,16 +228,16 @@ function FlowStandalone({ step }: { step: number }) {
                 </div>
                 <div className="w-6 h-1 bg-[#C6FF3B]/30 rounded-full" />
               </div>
-              <span className="text-[9px] text-[#8B949E]">Cashier</span>
+              <span className="text-[9px] text-[#8B949E]">{t.howItWorks.standalone.guest}</span>
             </div>
           </div>
           {/* Tip indicator */}
           <div className="bg-[#C6FF3B]/10 border border-[#C6FF3B]/30 rounded-xl px-4 py-2 text-center">
             <div className="text-[#C6FF3B] font-bold text-sm">💚 +€2.50 tip</div>
-            <div className="text-[10px] text-[#8B949E]">Balance left on Tappy</div>
+            <div className="text-[10px] text-[#8B949E]">{t.howItWorks.standalone.balanceLeft}</div>
           </div>
         </div>
-        <span className="text-[10px] text-[#8B949E] text-center">Guest pays cashier<br />with Tappy</span>
+        <span className="text-[10px] text-[#8B949E] text-center">{t.howItWorks.standalone.label3}</span>
       </div>
     </div>
   );
@@ -362,27 +324,17 @@ const avatars = [
 
 
 
-const stepDescriptions: Record<Mode, { n: string; title: string; desc: string }[]> = {
-  pos: [
-    { n: '1', title: 'Order. Enjoy.', desc: 'The group orders food and drinks. Every item is tracked in the POS system.' },
-    { n: '2', title: 'Bill updates automatically.', desc: 'Tappy is connected to the POS. As the group orders more, the bill on Tappy updates in real-time — no staff needed.' },
-    { n: '3', title: 'Everyone pays their share.', desc: 'When leaving, each guest taps their card on Tappy for their portion. The POS is marked as paid automatically.' },
-  ],
-  standalone: [
-    { n: '1', title: 'Order by the round.', desc: 'The group orders multiple rounds of drinks. No POS connection needed — Tappy works independently.' },
-    { n: '2', title: 'Pay as you go.', desc: 'After each round, everyone taps their share directly on Tappy. The balance builds up on the device.' },
-    { n: '3', title: 'Settle at the bar.', desc: 'One guest takes Tappy to the cashier and pays the full bill. Any balance left on Tappy becomes a tip for the venue.' },
-  ],
-};
-
 // --- Main component ---
 
 export default function HowItWorks() {
+  const { t } = useTranslation();
   const [mode, setMode] = useState<Mode>('pos');
   const [step, setStep] = useState(0);
   const sectionRef = useRef<HTMLDivElement>(null);
   const t1 = useRef<ReturnType<typeof setTimeout> | null>(null);
   const t2 = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const stepDescs = mode === 'pos' ? t.howItWorks.pos.steps : t.howItWorks.standalone.steps;
 
   function runFlow() {
     if (t1.current) clearTimeout(t1.current);
@@ -411,15 +363,15 @@ export default function HowItWorks() {
 
         {/* Header */}
         <div className="text-center mb-12">
-          <p className="text-xs font-semibold tracking-widest text-[#C6FF3B] uppercase mb-4">How it works</p>
+          <p className="text-xs font-semibold tracking-widest text-[#C6FF3B] uppercase mb-4">{t.howItWorks.label}</p>
           <h2 className="text-4xl md:text-5xl font-bold mb-8">
-            Simple for you.{' '}
-            <span className="text-[#C6FF3B]">Effortless</span> for your team.
+            {t.howItWorks.headline1}{' '}
+            <span className="text-[#C6FF3B]">{t.howItWorks.headline2}</span> {t.howItWorks.headline3}
           </h2>
 
           {/* Mode toggle */}
           <div className="inline-flex bg-[#1E242D] rounded-full p-1 gap-1">
-            {([['pos', 'Connected to POS'], ['standalone', 'Standalone']] as [Mode, string][]).map(([id, label]) => (
+            {([['pos', t.howItWorks.modePos], ['standalone', t.howItWorks.modeStandalone]] as [Mode, string][]).map(([id, label]) => (
               <button
                 key={id}
                 onClick={() => { setMode(id); setTimeout(runFlow, 50); }}
@@ -443,13 +395,13 @@ export default function HowItWorks() {
         {/* Replay — directly under animation */}
         <div className="flex justify-center mt-3 mb-6">
           <button onClick={runFlow} className="text-xs text-[#8B949E] hover:text-[#C6FF3B] transition-colors flex items-center gap-2">
-            <span>↺</span> Replay
+            <span>↺</span> {t.howItWorks.replay}
           </button>
         </div>
 
         {/* Step descriptions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16">
-          {stepDescriptions[mode].map((s, i) => (
+          {stepDescs.map((s, i) => (
             <div key={s.n} className={`p-6 rounded-2xl border transition-all duration-500 ${
               step === i ? 'bg-[#1E242D] border-[#C6FF3B]/40' :
               step > i  ? 'bg-[#1E242D]/50 border-white/5 opacity-70' :
@@ -466,15 +418,15 @@ export default function HowItWorks() {
 
         {/* Benefits */}
         <div className="border-t border-white/5 pt-16">
-          <p className="text-xs font-semibold tracking-widest text-[#C6FF3B] uppercase mb-4 text-center">Why Tappy</p>
+          <p className="text-xs font-semibold tracking-widest text-[#C6FF3B] uppercase mb-4 text-center">{t.howItWorks.whyLabel}</p>
           <h3 className="text-3xl md:text-4xl font-bold text-center mb-10">
-            Better for guests.<br />
-            <span className="text-[#C6FF3B]">Better for your business.</span>
+            {t.howItWorks.whyHeadline1}<br />
+            <span className="text-[#C6FF3B]">{t.howItWorks.whyHeadline2}</span>
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {benefits.map((b) => (
+            {t.howItWorks.benefits.map((b, i) => (
               <div key={b.title} className="bg-[#1E242D] rounded-2xl p-6 border border-white/5 hover:border-[#C6FF3B]/20 transition-colors">
-                <div className="text-2xl mb-3">{b.icon}</div>
+                <div className="text-2xl mb-3">{benefitIcons[i]}</div>
                 <h4 className="text-white font-bold mb-2 text-sm">{b.title}</h4>
                 <p className="text-xs text-[#8B949E] leading-relaxed">{b.desc}</p>
               </div>

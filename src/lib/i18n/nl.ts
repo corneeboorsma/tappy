@@ -1,0 +1,121 @@
+import type { Translations } from './en';
+
+const nl: Translations = {
+  nav: {
+    product: 'Product',
+    solutions: 'Oplossingen',
+    pricing: 'Prijzen',
+    about: 'Over ons',
+    support: 'Support',
+    login: 'Inloggen',
+    getStarted: 'Aan de slag',
+  },
+  hero: {
+    line1: 'Tap. Betaal.',
+    line2: 'Klaar.',
+    sub: 'Het alles-in-één betaalapparaat voor drukke horecagelegenheden.',
+    cta1: 'Bestel je Tappy',
+    cta2: 'Demo aanvragen',
+    trust: [
+      { title: 'Snelle betalingen', sub: 'Binnen seconden betaald' },
+      { title: 'Betrouwbaar & veilig', sub: 'Gebouwd voor gemoedsrust' },
+      { title: 'Realtime inzicht', sub: 'Zie wat telt' },
+    ],
+    animBillPaid: '✓ Rekening betaald',
+    animAllPaid: 'Iedereen betaald',
+    animTapped: (n: number, total: number) => `${n}/${total} getapt`,
+    animTotal: 'Totaal',
+  },
+  features: {
+    label: 'Gebouwd voor horeca',
+    headline1: 'Meer tijd voor je gasten.',
+    headline2: 'Meer omzet',
+    headline3: 'voor jouw zaak.',
+    sub: 'Tappy helpt bars, cafés, restaurants en sportkantines betalingen te stroomlijnen, wachtrijen te verkorten en de gastbeleving te verbeteren.',
+    items: [
+      {
+        title: 'Alle betalingen. Één oplossing.',
+        desc: 'Accepteer elke betaalmethode. Passen, telefoons, wearables en meer.',
+        imgAlt: 'Tappy-apparaat met contactloze kaartbetaling',
+      },
+      {
+        title: 'Realtime inzichten.',
+        desc: 'Volg omzet, fooien en prestaties realtime vanaf elk apparaat.',
+        imgAlt: 'Realtime verkoopoverzicht op mobiel',
+      },
+      {
+        title: 'Gemaakt voor drukke teams.',
+        desc: 'Eenvoudig in gebruik, snel geleerd en klaar voor de rush.',
+        imgAlt: 'Barman serveert gasten met Tappy op de bar',
+      },
+    ],
+  },
+  howItWorks: {
+    label: 'Zo werkt het',
+    headline1: 'Simpel voor jou.',
+    headline2: 'Moeiteloos',
+    headline3: 'voor je team.',
+    modePos: 'Gekoppeld aan kassa',
+    modeStandalone: 'Zelfstandig',
+    replay: 'Opnieuw',
+    pos: {
+      steps: [
+        { n: '1', title: 'Bestellen. Genieten.', desc: 'De groep bestelt eten en drinken. Elke bestelling wordt bijgehouden in het kassasysteem.' },
+        { n: '2', title: 'Rekening wordt automatisch bijgewerkt.', desc: 'Tappy is gekoppeld aan de kassa. Naarmate de groep meer bestelt, wordt de rekening op Tappy realtime bijgewerkt — zonder tussenkomst van personeel.' },
+        { n: '3', title: 'Iedereen betaalt zijn deel.', desc: 'Bij het vertrek tapt elke gast zijn kaart op Tappy voor zijn deel. De kassa wordt automatisch als betaald gemarkeerd.' },
+      ],
+      label1: 'Gasten bestellen eten & drinken',
+      label2: 'Rekening wordt automatisch bijgewerkt op Tappy',
+      label3: 'Iedereen betaalt zijn deel\nKassa gemarkeerd als betaald ✓',
+    },
+    standalone: {
+      steps: [
+        { n: '1', title: 'Bestellen per ronde.', desc: 'De groep bestelt meerdere rondes drinken. Geen kassakoppeling nodig — Tappy werkt zelfstandig.' },
+        { n: '2', title: 'Betalen onderweg.', desc: 'Na elke ronde tapt iedereen zijn deel direct op Tappy. Het saldo bouwt op op het apparaat.' },
+        { n: '3', title: 'Afrekenen aan de bar.', desc: 'Eén gast neemt Tappy mee naar de kassa en betaalt de volledige rekening. Het saldo dat overblijft op Tappy wordt een fooi voor de zaak.' },
+      ],
+      label1: 'Groep bestelt meerdere rondes',
+      label2: 'Iedereen betaalt onderweg',
+      label3: 'Gast betaalt aan de kassa met Tappy',
+      round: 'Ronde',
+      guest: 'Gast',
+      balanceLeft: 'Resterend saldo op Tappy',
+    },
+    whyLabel: 'Waarom Tappy',
+    whyHeadline1: 'Beter voor gasten.',
+    whyHeadline2: 'Beter voor jouw zaak.',
+    benefits: [
+      { title: 'Gasten hebben de controle.', desc: 'Iedereen betaalt zijn eigen deel, op zijn eigen tempo. Geen ongemakkelijk rekening splitsen.' },
+      { title: 'Minder werk voor personeel.', desc: 'Geen rondlopen met rekeningen of splitsen meer. Personeel richt zich op wat telt.' },
+      { title: 'Meer tafels, zelfde team.', desc: 'Eén medewerker kan meer tafels bedienen als betalingen vanzelf gaan.' },
+      { title: 'Resterend saldo = fooi.', desc: 'Elk bedrag dat na betaling op Tappy overblijft gaat direct als fooi naar de zaak.' },
+      { title: 'Geen weglopen zonder te betalen.', desc: 'Betaling wordt geïnd voordat gasten vertrekken. Geen onbetaalde rekeningen meer.' },
+      { title: 'Realtime omzetinzicht.', desc: 'Zie precies wat er per tafel, per uur is geïnd — live. Geen verrassingen aan het einde van de avond.' },
+      { title: 'Snellere tafelomloopsnelheid.', desc: 'Gasten wachten niet op de rekening. Als ze weg willen, tappen ze en gaan ze. Tafel wordt sneller vrij.' },
+      { title: 'Werkt met elke betaalmethode.', desc: 'Passen, telefoons, smartwatches — als het kan tappen, accepteert Tappy het.' },
+    ],
+  },
+  terminal: {
+    ready: 'Klaar',
+    tagline: 'Tap. Betaal. Klaar.',
+    paid: 'Betaald!',
+    thankyou: 'Dank je',
+  },
+  footer: {
+    tagline: 'Tap. Betaal. Klaar.',
+    cols: [
+      { title: 'Product', links: ['Terminal', 'Betalingen', 'Inzichten', 'Integraties'] },
+      { title: 'Oplossingen', links: ['Bars & Pubs', 'Cafés', 'Restaurants', 'Sport & Events'] },
+      { title: 'Bedrijf', links: ['Over ons', 'Vacatures', 'Nieuws', 'Contact'] },
+      { title: 'Support', links: ['Helpcentrum', 'Documentatie', 'Status'] },
+    ],
+    newsletter: 'Blijf op de hoogte',
+    newsletterSub: 'Ontvang het laatste nieuws en updates direct in je inbox.',
+    emailPlaceholder: 'Jouw e-mailadres',
+    copyright: '© 2025 Tappy. Alle rechten voorbehouden.',
+    privacy: 'Privacybeleid',
+    terms: 'Algemene voorwaarden',
+  },
+};
+
+export default nl;
