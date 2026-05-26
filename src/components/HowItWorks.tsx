@@ -21,7 +21,7 @@ function FlowPOS({ step }: { step: number }) {
   const amounts = ['€8,50', '€18,50', '€32,50'];
 
   return (
-    <div className="relative flex flex-col md:flex-row items-center justify-center gap-6 md:gap-3" style={{ transform: 'scale(1.3)', transformOrigin: 'center top' }}>
+    <div className="relative flex flex-col md:flex-row items-center justify-center gap-6 md:gap-3" style={{ zoom: 1.3 }}>
       {/* Step 1: Table with guests ordering */}
       <div className="flex flex-col items-center gap-3 flex-1">
         <StepBadge n={1} active={step >= 0} />
@@ -144,7 +144,7 @@ function FlowStandalone({ step }: { step: number }) {
   ];
 
   return (
-    <div className="relative flex flex-col md:flex-row items-center justify-center gap-6 md:gap-3" style={{ transform: 'scale(1.3)', transformOrigin: 'center top' }}>
+    <div className="relative flex flex-col md:flex-row items-center justify-center gap-6 md:gap-3" style={{ zoom: 1.3 }}>
       {/* Step 1: rounds being ordered, paying per round */}
       <div className="flex flex-col items-center gap-3 flex-1">
         <StepBadge n={1} active={step >= 0} />
@@ -381,7 +381,7 @@ export default function HowItWorks() {
         </div>
 
         {/* Visual flow */}
-        <div className="bg-[#1E242D] rounded-3xl p-8 md:p-10 pb-16 md:pb-20 overflow-hidden relative">
+        <div className="bg-[#1E242D] rounded-3xl p-8 md:p-10 overflow-hidden relative">
           <div className="absolute inset-0 opacity-[0.025]"
             style={{ backgroundImage: 'radial-gradient(circle, #C6FF3B 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
           <div className="relative">
