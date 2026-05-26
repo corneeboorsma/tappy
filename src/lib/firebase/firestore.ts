@@ -8,6 +8,7 @@ import {
   setDoc,
   query,
   orderBy,
+  where,
   Timestamp,
 } from 'firebase/firestore';
 import { db } from './client';
@@ -52,6 +53,19 @@ export interface Terminal {
   locatieId: string;
   serienummer: string;
   status: TerminalStatus;
+  bedrag: number;
+  aangemaaktOp: Timestamp;
+}
+
+// Global terminal (root /terminals collection)
+export interface GlobalTerminal {
+  id: string;
+  naam: string;
+  serienummer: string;
+  model: string;
+  status: TerminalStatus;
+  tenantId: string | null;   // null = niet toegewezen
+  tafelNummer: string;
   bedrag: number;
   aangemaaktOp: Timestamp;
 }
@@ -108,6 +122,15 @@ export async function createPortalUser(uid: string, data: Omit<PortalUser, 'uid'
   await setDoc(doc(db, 'users', uid), data);
 }
 
+export async function getPortalUserByTenantId(tenantId: string): Promise<PortalUser | null> {
+  const snap = await getDocs(
+    query(collection(db, 'users'), where('tenantId', '==', tenantId))
+  );
+  if (snap.empty) return null;
+  const d = snap.docs[0];
+  return { uid: d.id, ...d.data() } as PortalUser;
+}
+
 // --- Terminals ---
 
 export async function getTerminals(tenantId: string): Promise<Terminal[]> {
@@ -127,6 +150,45 @@ export async function addTerminal(tenantId: string, data: Omit<Terminal, 'id' | 
 
 export async function updateTerminal(tenantId: string, terminalId: string, data: Partial<Omit<Terminal, 'id'>>): Promise<void> {
   await updateDoc(doc(db, 'tenants', tenantId, 'terminals', terminalId), data as Record<string, unknown>);
+}
+
+// --- Global Terminals ---
+
+export async function getGlobalTerminals(): Promise<GlobalTerminal[]> {
+  const snap = await getDocs(
+    query(collection(db, 'terminals'), orderBy('aangemaaktOp', 'desc'))
+  );
+  return snap.docs.map(d => ({ id: d.id, ...d.data() } as GlobalTerminal));
+}
+
+export async function getGlobalTerminalsByTenant(tenantId: string): Promise<GlobalTerminal[]> {
+  const snap = await getDocs(
+    query(collection(db, 'terminals'), where('tenantId', '==', tenantId))
+  );
+  return snap.docs.map(d => ({ id: d.id, ...d.data() } as GlobalTerminal));
+}
+
+export async function getUnassignedTerminals(): Promise<GlobalTerminal[]> {
+  const snap = await getDocs(
+    query(collection(db, 'terminals'), where('tenantId', '==', null))
+  );
+  return snap.docs.map(d => ({ id: d.id, ...d.data() } as GlobalTerminal));
+}
+
+export async function createGlobalTerminal(data: Omit<GlobalTerminal, 'id' | 'aangemaaktOp'>): Promise<string> {
+  const ref = await addDoc(collection(db, 'terminals'), {
+    ...data,
+    aangemaaktOp: Timestamp.now(),
+  });
+  return ref.id;
+}
+
+export async function updateGlobalTerminal(terminalId: string, data: Partial<Omit<GlobalTerminal, 'id'>>): Promise<void> {
+  await updateDoc(doc(db, 'terminals', terminalId), data as Record<string, unknown>);
+}
+
+export async function assignTerminal(terminalId: string, tenantId: string | null): Promise<void> {
+  await updateDoc(doc(db, 'terminals', terminalId), { tenantId });
 }
 
 // --- Transactions ---
