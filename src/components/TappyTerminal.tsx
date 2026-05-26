@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface TappyTerminalProps {
   size?: 'sm' | 'md' | 'lg';
   state?: 'idle' | 'active' | 'paid';
@@ -112,15 +114,14 @@ export default function TappyTerminal({
         gap: base * 0.05,
         boxShadow: '0 6px 20px rgba(0,0,0,0.7)',
       }}>
-        {/* tappy)) wordmark */}
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}>
-          <span style={{ fontSize: base * 0.13, fontWeight: 500, color: 'rgba(255,255,255,0.35)', letterSpacing: 1 }}>
-            tappy
-          </span>
-          <span style={{ fontSize: base * 0.12, color: 'rgba(198,255,59,0.6)', letterSpacing: -1 }}>
-            ))
-          </span>
-        </div>
+        {/* tappy)) wordmark — real logo */}
+        <Image
+          src="/images/tappy-logo-dark.png"
+          alt="tappy"
+          width={base * 0.55}
+          height={base * 0.16}
+          style={{ opacity: 0.6, objectFit: 'contain' }}
+        />
 
         {/* Electric Lime LED strip */}
         <div style={{
