@@ -229,6 +229,8 @@ function FlowStandalone({ step }: { step: number }) {
                 <div className="w-6 h-1 bg-[#C6FF3B]/30 rounded-full" />
               </div>
               <span className="text-[9px] text-[#8B949E]">POS</span>
+            </div>
+          </div>
           <div className="bg-[#C6FF3B]/10 border border-[#C6FF3B]/30 rounded-xl px-4 py-2 text-center">
             <div className="text-[#C6FF3B] font-bold text-sm">💚 +€2.50 tip</div>
             <div className="text-[10px] text-[#8B949E]">{t.howItWorks.standalone.balanceLeft}</div>
