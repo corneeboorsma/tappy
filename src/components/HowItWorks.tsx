@@ -66,7 +66,7 @@ function FlowPOS({ step }: { step: number }) {
               </div>
               <div className="w-6 h-1 bg-white/10 rounded-full" />
             </div>
-            <span className="text-[9px] text-[#8B949E]">{t.howItWorks.standalone.guest}</span>
+            <span className="text-[9px] text-[#8B949E]">POS</span>
           </div>
 
           {/* Sync arrow */}
