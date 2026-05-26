@@ -13,12 +13,12 @@ function FlowPOS({ step }: { step: number }) {
   const { t } = useTranslation();
   const orders = ['🍺 Beer', '🍔 Burger', '🍷 Wine', '🥗 Salad'];
   const guests = [
-    { name: 'Anna', paid: '€8.50' },
-    { name: 'Mike', paid: '€12.00' },
-    { name: 'Sara', paid: '€9.25' },
-    { name: 'Tom', paid: '€6.75' },
+    { name: 'Anna', paid: '€8,50' },
+    { name: 'Mike', paid: '€10,00' },
+    { name: 'Sara', paid: '€7,50' },
+    { name: 'Tom', paid: '€6,50' },
   ];
-  const amounts = ['€12.00', '€28.50', '€36.50'];
+  const amounts = ['€8,50', '€18,50', '€32,50'];
 
   return (
     <div className="relative flex flex-col md:flex-row items-center justify-center gap-6 md:gap-3">
@@ -92,7 +92,7 @@ function FlowPOS({ step }: { step: number }) {
           </div>
 
           {/* Tappy device */}
-          <TappyDevice step={step} targetStep={1} finalStep={2} amount="€36.50" />
+          <TappyDevice step={step} targetStep={1} finalStep={2} amount="€32,50" />
         </div>
         <span className="text-[10px] text-[#8B949E] text-center">{t.howItWorks.pos.label2}</span>
       </div>
@@ -134,14 +134,14 @@ function FlowPOS({ step }: { step: number }) {
 function FlowStandalone({ step }: { step: number }) {
   const { t } = useTranslation();
   const rounds = [
-    { label: `${t.howItWorks.standalone.round} 1`, items: ['🍺', '🍺', '🥤', '🍺'], total: '€18.00' },
-    { label: `${t.howItWorks.standalone.round} 2`, items: ['🍺', '🍷', '🍺', '🥤'], total: '€22.00' },
+    { label: `${t.howItWorks.standalone.round} 1`, items: ['🍺', '🍺', '🥤', '🍺'], total: '€16,00' },
+    { label: `${t.howItWorks.standalone.round} 2`, items: ['🍺', '🍷', '🍺', '🥤'], total: '€16,50' },
   ];
   const guests = [
-    { name: 'Anna', paid: '€10.00' },
-    { name: 'Mike', paid: '€14.00' },
-    { name: 'Sara', paid: '€8.50' },
-    { name: 'Tom', paid: '€7.50' },
+    { name: 'Anna', paid: '€8,50' },
+    { name: 'Mike', paid: '€10,00' },
+    { name: 'Sara', paid: '€7,50' },
+    { name: 'Tom', paid: '€6,50' },
   ];
 
   return (
@@ -176,7 +176,7 @@ function FlowStandalone({ step }: { step: number }) {
       <div className="flex flex-col items-center gap-3 flex-1">
         <StepBadge n={2} active={step >= 1} />
         <div className="flex flex-col items-center gap-3">
-          <TappyDevice step={step} targetStep={1} finalStep={2} amount="€40.00" />
+          <TappyDevice step={step} targetStep={1} finalStep={2} amount="€32,50" />
           <div className="flex gap-2">
             {guests.map((g, i) => (
               <div
@@ -224,7 +224,7 @@ function FlowStandalone({ step }: { step: number }) {
             <div className="flex flex-col items-center gap-1">
               <div className="w-12 h-14 bg-[#0D1117] border-2 border-[#C6FF3B]/40 rounded-lg flex flex-col items-center justify-center gap-1">
                 <div className="w-8 h-5 bg-[#1E242D] rounded-sm flex items-center justify-center">
-                  <span className="text-[8px] text-[#C6FF3B]">€40</span>
+                  <span className="text-[8px] text-[#C6FF3B]">€32,50</span>
                 </div>
                 <div className="w-6 h-1 bg-[#C6FF3B]/30 rounded-full" />
               </div>
