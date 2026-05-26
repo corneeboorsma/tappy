@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import * as XLSX from 'xlsx';
 
 export interface Column {
   key: string;
@@ -13,6 +14,7 @@ interface DataTableProps<T extends Record<string, unknown>> {
   rows: T[];
   renderCell: (row: T, key: string) => React.ReactNode;
   actions?: (row: T) => React.ReactNode;
+  exportFilename?: string;
 }
 
 function storageKey(id: string) {
@@ -32,7 +34,7 @@ function getSortValue(row: Record<string, unknown>, key: string): string {
 }
 
 export default function DataTable<T extends Record<string, unknown>>({
-  id, columns, rows, renderCell, actions,
+  id, columns, rows, renderCell, actions, exportFilename,
 }: DataTableProps<T>) {
   const [visibleKeys, setVisibleKeys] = useState<string[]>(() =>
     columns.filter(c => c.defaultVisible !== false).map(c => c.key)
@@ -118,12 +120,42 @@ export default function DataTable<T extends Record<string, unknown>>({
     return sortDir === 'asc' ? cmp : -cmp;
   });
 
+  function handleExport() {
+    const data = sorted.map(row =>
+      Object.fromEntries(
+        orderedVisible.map(col => {
+          const v = row[col.key];
+          let val: string | number;
+          if (v == null) val = '';
+          else if (typeof v === 'string' || typeof v === 'number') val = v;
+          else if (typeof v === 'object' && 'toDate' in (v as object))
+            val = (v as { toDate: () => Date }).toDate().toLocaleDateString('nl-NL');
+          else val = String(v);
+          return [col.label, val];
+        })
+      )
+    );
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Data');
+    XLSX.writeFile(wb, `${exportFilename ?? id}.xlsx`);
+  }
+
   return (
     <div>
       {/* Toolbar */}
       <div className="flex justify-between items-center mb-3">
         <span className="text-xs text-[#8B949E]">{sorted.length} resultaten</span>
-        <div className="relative">
+        <div className="flex items-center gap-2">
+          {exportFilename !== undefined && (
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-1.5 text-xs text-[#8B949E] hover:text-white bg-[#1E242D] border border-white/10 px-3 py-1.5 rounded-lg transition-colors"
+            >
+              ↓ Exporteren
+            </button>
+          )}
+          <div className="relative">
           <button
             onClick={() => setShowSettings(v => !v)}
             className="flex items-center gap-1.5 text-xs text-[#8B949E] hover:text-white bg-[#1E242D] border border-white/10 px-3 py-1.5 rounded-lg transition-colors"
@@ -164,6 +196,7 @@ export default function DataTable<T extends Record<string, unknown>>({
               </div>
             </div>
           )}
+        </div>
         </div>
       </div>
 

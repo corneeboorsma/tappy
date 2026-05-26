@@ -84,9 +84,16 @@ Herbruikbare tabel voor alle overzichtspagina's in het portal. Verplicht te gebr
 - Zoeken per kolom (filter input per kolom-header)
 - Sorteren door op een kolomlabel te klikken — pijl omhoog/omlaag geeft richting aan; klik nogmaals om te wisselen
 - Standaard gesorteerd op de eerste zichtbare kolom A→Z
+- Exporteren naar .xlsx via `exportFilename` prop — exporteert de huidige gefilterde/gesorteerde weergave
 - Kolommen aan/uitzetten via een kolommenkiezer (⚙ knop)
 - Kolomvolgorde aanpassen via omhoog/omlaag knoppen in de kolommenkiezer
 - Voorkeur wordt opgeslagen in `localStorage` per tabel-ID
+
+**Export activeren:**
+```tsx
+<DataTable exportFilename="tappy-klanten" ... />
+```
+Exportknop verschijnt alleen als `exportFilename` is meegegeven. Bestandsnaam wordt `{exportFilename}.xlsx`.
 
 **Gebruik:**
 ```tsx

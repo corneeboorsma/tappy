@@ -7,7 +7,6 @@ import { useAuth } from '@/lib/portal/AuthContext';
 const superAdminNav = [
   { href: '/portal/super', label: 'Klanten', icon: '🏢' },
   { href: '/portal/super/terminals', label: 'Tappy Terminals', icon: '📟' },
-  { href: '/portal/super/klanten/nieuw', label: 'Klant aanmaken', icon: '＋' },
 ];
 
 const adminNav = [

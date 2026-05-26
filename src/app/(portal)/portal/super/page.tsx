@@ -52,6 +52,7 @@ export default function SuperDashboard() {
       ) : (
         <DataTable
           id="klanten"
+          exportFilename="tappy-klanten"
           columns={[
             { key: 'bedrijfsnaam', label: 'Bedrijf', defaultVisible: true },
             { key: 'plaats', label: 'Plaats', defaultVisible: true },
