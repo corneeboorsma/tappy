@@ -11,7 +11,7 @@ import {
   type Tenant, type GlobalTerminal, type PortalUser,
 } from '@/lib/firebase/firestore';
 
-type Tab = 'gegevens' | 'terminals' | 'login';
+type Tab = 'gegevens' | 'terminals' | 'omzet' | 'login';
 
 export default function KlantDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -155,12 +155,12 @@ export default function KlantDetailPage() {
 
       {/* Tabs */}
       <div className="flex gap-1 bg-[#1E242D] rounded-xl p-1 w-fit mb-8">
-        {(['gegevens', 'terminals', 'login'] as Tab[]).map(t => (
+        {(['gegevens', 'terminals', 'omzet', 'login'] as Tab[]).map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all capitalize ${tab === t ? 'bg-[#C6FF3B] text-[#0D1117]' : 'text-[#8B949E] hover:text-white'}`}>
             {t === 'gegevens' ? 'Gegevens' : t === 'terminals' ? (
               <>Terminals <span className="ml-2 bg-white/10 text-[#8B949E] text-xs px-1.5 py-0.5 rounded-full">{assignedTerminals.length}</span></>
-            ) : 'Login'}
+            ) : t === 'omzet' ? 'Omzet' : 'Login'}
           </button>
         ))}
       </div>
@@ -271,6 +271,10 @@ export default function KlantDetailPage() {
             }}
           />
         </div>
+      )}
+
+      {tab === 'omzet' && tenant && (
+        <OmzetTab tenant={tenant} terminals={assignedTerminals} />
       )}
 
       {tab === 'login' && (
@@ -426,6 +430,91 @@ export default function KlantDetailPage() {
         </div>
       )}
     </>
+  );
+}
+
+const ASSUMED_TRANSACTIONS_PER_MONTH = 1000;
+const ASSUMED_AVG_TRANSACTION = 20;
+
+function OmzetTab({ tenant, terminals }: { tenant: Tenant; terminals: GlobalTerminal[] }) {
+  const activeCount = terminals.filter(t => t.status === 'active').length;
+  const totalCount = terminals.length;
+
+  const vastPerMaand = activeCount * tenant.pricing.vastPerTerminal;
+  const transactiesOmzet = ASSUMED_TRANSACTIONS_PER_MONTH * ASSUMED_AVG_TRANSACTION;
+  const transactieKosten = transactiesOmzet * (tenant.pricing.transactieTarief / 100);
+  const totaalPerMaand = vastPerMaand + transactieKosten;
+
+  const now = new Date();
+  const months = Array.from({ length: 6 }, (_, i) => {
+    const d = new Date(now.getFullYear(), now.getMonth() - 5 + i, 1);
+    return {
+      label: d.toLocaleDateString('nl-NL', { month: 'short', year: '2-digit' }),
+      vast: vastPerMaand,
+      transactie: transactieKosten,
+      totaal: totaalPerMaand,
+    };
+  });
+
+  function fmt(n: number) {
+    return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+  }
+
+  const maxBar = Math.max(...months.map(m => m.totaal), 1);
+
+  return (
+    <div className="flex flex-col gap-6 max-w-3xl">
+      {/* KPI cards */}
+      <div className="grid grid-cols-3 gap-4">
+        <div className="bg-[#1E242D] rounded-2xl p-5 border border-white/5">
+          <p className="text-xs text-[#8B949E] uppercase tracking-wide mb-2">Vast (maandelijks)</p>
+          <p className="text-2xl font-bold text-white">{fmt(vastPerMaand)}</p>
+          <p className="text-xs text-[#8B949E] mt-1">{activeCount}/{totalCount} actieve terminals × {fmt(tenant.pricing.vastPerTerminal)}</p>
+        </div>
+        <div className="bg-[#1E242D] rounded-2xl p-5 border border-white/5">
+          <p className="text-xs text-[#8B949E] uppercase tracking-wide mb-2">Transactiekosten</p>
+          <p className="text-2xl font-bold text-white">{fmt(transactieKosten)}</p>
+          <p className="text-xs text-[#8B949E] mt-1">{ASSUMED_TRANSACTIONS_PER_MONTH.toLocaleString('nl-NL')} tx × {fmt(ASSUMED_AVG_TRANSACTION)} × {tenant.pricing.transactieTarief}%</p>
+        </div>
+        <div className="bg-[#1E242D] rounded-2xl p-5 border border-[#C6FF3B]/20">
+          <p className="text-xs text-[#C6FF3B] uppercase tracking-wide mb-2">Totaal per maand</p>
+          <p className="text-2xl font-bold text-[#C6FF3B]">{fmt(totaalPerMaand)}</p>
+          <p className="text-xs text-[#8B949E] mt-1">Vast + transactiekosten</p>
+        </div>
+      </div>
+
+      {/* Bar chart */}
+      <div className="bg-[#1E242D] rounded-2xl p-6 border border-white/5">
+        <h2 className="text-sm font-bold text-white mb-6">Maandoverzicht (aanname)</h2>
+        <div className="flex items-end gap-3 h-40">
+          {months.map((m, i) => (
+            <div key={i} className="flex-1 flex flex-col items-center gap-2">
+              <span className="text-xs text-[#8B949E]">{fmt(m.totaal)}</span>
+              <div className="w-full flex flex-col-reverse gap-0.5" style={{ height: `${(m.totaal / maxBar) * 100}px` }}>
+                <div className="w-full rounded-b-lg bg-[#C6FF3B]/80" style={{ flex: m.vast }} />
+                <div className="w-full rounded-t-lg bg-[#C6FF3B]/30" style={{ flex: m.transactie }} />
+              </div>
+              <span className="text-xs text-[#8B949E]">{m.label}</span>
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-4 mt-4">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm bg-[#C6FF3B]/80" />
+            <span className="text-xs text-[#8B949E]">Vast tarief</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm bg-[#C6FF3B]/30" />
+            <span className="text-xs text-[#8B949E]">Transactiekosten</span>
+          </div>
+        </div>
+      </div>
+
+      <p className="text-xs text-[#8B949E]">
+        * Transacties gebaseerd op aanname: {ASSUMED_TRANSACTIONS_PER_MONTH.toLocaleString('nl-NL')} transacties/maand bij gemiddeld {fmt(ASSUMED_AVG_TRANSACTION)}.
+        Zodra echte transactiedata beschikbaar is wordt dit automatisch bijgewerkt.
+      </p>
+    </div>
   );
 }
 
