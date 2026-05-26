@@ -23,7 +23,8 @@ export default function KlantDetailPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  // Bulk assign
+  // Assign modal
+  const [showAssignModal, setShowAssignModal] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [assigning, setAssigning] = useState(false);
 
@@ -86,6 +87,7 @@ export default function KlantDetailPage() {
     await Promise.all([...selectedIds].map(tid => assignTerminal(tid, id)));
     setSelectedIds(new Set());
     setAssigning(false);
+    setShowAssignModal(false);
     await load();
   }
 
@@ -219,106 +221,55 @@ export default function KlantDetailPage() {
       )}
 
       {tab === 'terminals' && (
-        <div className="flex flex-col gap-8">
-
-          {/* Toegewezen terminals */}
-          <div>
-            <h2 className="text-sm font-bold text-white mb-4">
-              Toegewezen terminals
-              <span className="ml-2 text-[#8B949E] font-normal">({assignedTerminals.length})</span>
-            </h2>
-            <DataTable
-              id={`klant-terminals-${id}`}
-              columns={[
-                { key: 'naam', label: 'Naam', defaultVisible: true },
-                { key: 'serienummer', label: 'Serienummer', defaultVisible: true },
-                { key: 'model', label: 'Model', defaultVisible: true },
-                { key: 'tafelNummer', label: 'Tafel', defaultVisible: true },
-                { key: 'status', label: 'Status', defaultVisible: true },
-              ]}
-              rows={assignedTerminals as unknown as Record<string, unknown>[]}
-              renderCell={(row, key) => {
-                const term = row as unknown as GlobalTerminal;
-                if (key === 'naam') return <span className="font-medium text-white">{term.naam}</span>;
-                if (key === 'serienummer') return <span className="text-[#8B949E] font-mono text-xs">{term.serienummer || '—'}</span>;
-                if (key === 'model') return <span className="text-[#8B949E]">{term.model || '—'}</span>;
-                if (key === 'tafelNummer') return <span className="text-[#8B949E]">{term.tafelNummer || '—'}</span>;
-                if (key === 'status') return (
-                  <button onClick={() => handleToggleStatus(term)}
-                    className={`text-xs font-semibold px-2.5 py-1 rounded-full border transition-colors ${
-                      term.status === 'active'
-                        ? 'bg-[#C6FF3B]/10 text-[#C6FF3B] border-[#C6FF3B]/20 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20'
-                        : 'bg-white/5 text-[#8B949E] border-white/10 hover:bg-[#C6FF3B]/10 hover:text-[#C6FF3B] hover:border-[#C6FF3B]/20'
-                    }`}>
-                    {term.status === 'active' ? 'Actief' : 'Inactief'}
-                  </button>
-                );
-                return null;
-              }}
-              actions={(row) => {
-                const term = row as unknown as GlobalTerminal;
-                return (
-                  <button onClick={() => handleUnassign(term.id)}
-                    className="text-xs text-red-400 hover:underline">
-                    Verwijderen
-                  </button>
-                );
-              }}
-            />
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-end">
+            <button
+              onClick={() => { setSelectedIds(new Set()); setShowAssignModal(true); }}
+              className="bg-[#C6FF3B] text-[#0D1117] font-bold px-5 py-2.5 rounded-xl hover:bg-[#d4ff5a] transition-colors text-sm"
+            >
+              + Terminals toewijzen
+            </button>
           </div>
 
-          {/* Beschikbare terminals toewijzen */}
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-bold text-white">
-                Terminals toewijzen
-                <span className="ml-2 text-[#8B949E] font-normal">({availableTerminals.length} beschikbaar)</span>
-              </h2>
-              {selectedIds.size > 0 && (
-                <button onClick={handleBulkAssign} disabled={assigning}
-                  className="bg-[#C6FF3B] text-[#0D1117] font-bold px-4 py-2 rounded-xl hover:bg-[#d4ff5a] transition-colors text-sm disabled:opacity-50">
-                  {assigning ? 'Toewijzen...' : `${selectedIds.size} terminal${selectedIds.size > 1 ? 's' : ''} toewijzen`}
+          <DataTable
+            id={`klant-terminals-${id}`}
+            exportFilename={`terminals-${tenant.bedrijfsnaam.toLowerCase().replace(/\s+/g, '-')}`}
+            columns={[
+              { key: 'naam', label: 'Naam', defaultVisible: true },
+              { key: 'serienummer', label: 'Serienummer', defaultVisible: true },
+              { key: 'model', label: 'Model', defaultVisible: true },
+              { key: 'tafelNummer', label: 'Tafel', defaultVisible: true },
+              { key: 'status', label: 'Status', defaultVisible: true },
+            ]}
+            rows={assignedTerminals as unknown as Record<string, unknown>[]}
+            renderCell={(row, key) => {
+              const term = row as unknown as GlobalTerminal;
+              if (key === 'naam') return <span className="font-medium text-white">{term.naam}</span>;
+              if (key === 'serienummer') return <span className="text-[#8B949E] font-mono text-xs">{term.serienummer || '—'}</span>;
+              if (key === 'model') return <span className="text-[#8B949E]">{term.model || '—'}</span>;
+              if (key === 'tafelNummer') return <span className="text-[#8B949E]">{term.tafelNummer || '—'}</span>;
+              if (key === 'status') return (
+                <button onClick={() => handleToggleStatus(term)}
+                  className={`text-xs font-semibold px-2.5 py-1 rounded-full border transition-colors ${
+                    term.status === 'active'
+                      ? 'bg-[#C6FF3B]/10 text-[#C6FF3B] border-[#C6FF3B]/20 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20'
+                      : 'bg-white/5 text-[#8B949E] border-white/10 hover:bg-[#C6FF3B]/10 hover:text-[#C6FF3B] hover:border-[#C6FF3B]/20'
+                  }`}>
+                  {term.status === 'active' ? 'Actief' : 'Inactief'}
                 </button>
-              )}
-            </div>
-            {availableTerminals.length === 0 ? (
-              <div className="bg-[#1E242D] rounded-2xl border border-white/5 px-5 py-8 text-center text-[#8B949E] text-sm">
-                Alle terminals zijn al toegewezen.{' '}
-                <Link href="/portal/super/terminals" className="text-[#C6FF3B] hover:underline">
-                  Nieuwe terminal aanmaken →
-                </Link>
-              </div>
-            ) : (
-              <div className="bg-[#1E242D] rounded-2xl border border-white/5 overflow-hidden">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-white/5">
-                      <th className="w-10 px-4 py-3" />
-                      <th className="text-left px-5 py-3 text-xs text-[#8B949E] uppercase tracking-wide font-medium">Naam</th>
-                      <th className="text-left px-5 py-3 text-xs text-[#8B949E] uppercase tracking-wide font-medium">Serienummer</th>
-                      <th className="text-left px-5 py-3 text-xs text-[#8B949E] uppercase tracking-wide font-medium">Model</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {availableTerminals.map(term => (
-                      <tr key={term.id} onClick={() => toggleSelect(term.id)}
-                        className={`border-b border-white/5 last:border-0 cursor-pointer transition-colors ${
-                          selectedIds.has(term.id) ? 'bg-[#C6FF3B]/5' : 'hover:bg-white/[0.02]'
-                        }`}>
-                        <td className="px-4 py-3">
-                          <input type="checkbox" checked={selectedIds.has(term.id)} onChange={() => toggleSelect(term.id)} onClick={e => e.stopPropagation()}
-                            className="accent-[#C6FF3B] w-4 h-4 cursor-pointer" />
-                        </td>
-                        <td className="px-5 py-3 text-sm font-medium text-white">{term.naam}</td>
-                        <td className="px-5 py-3 text-sm text-[#8B949E] font-mono">{term.serienummer || '—'}</td>
-                        <td className="px-5 py-3 text-sm text-[#8B949E]">{term.model || '—'}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+              );
+              return null;
+            }}
+            actions={(row) => {
+              const term = row as unknown as GlobalTerminal;
+              return (
+                <button onClick={() => handleUnassign(term.id)}
+                  className="text-xs text-red-400 hover:underline">
+                  Verwijderen
+                </button>
+              );
+            }}
+          />
         </div>
       )}
 
@@ -406,6 +357,72 @@ export default function KlantDetailPage() {
               </form>
             </section>
           )}
+        </div>
+      )}
+
+      {/* Assign terminals modal */}
+      {showAssignModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 px-4">
+          <div className="bg-[#1E242D] rounded-2xl border border-white/10 w-full max-w-lg flex flex-col max-h-[80vh]">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-white/5">
+              <div>
+                <h2 className="text-white font-bold">Terminals toewijzen</h2>
+                <p className="text-xs text-[#8B949E] mt-0.5">{availableTerminals.length} beschikbaar</p>
+              </div>
+              <button onClick={() => setShowAssignModal(false)} className="text-[#8B949E] hover:text-white text-lg leading-none">✕</button>
+            </div>
+
+            {availableTerminals.length === 0 ? (
+              <div className="px-6 py-10 text-center text-[#8B949E] text-sm">
+                Alle terminals zijn al toegewezen.{' '}
+                <Link href="/portal/super/terminals" className="text-[#C6FF3B] hover:underline">
+                  Nieuwe terminal aanmaken →
+                </Link>
+              </div>
+            ) : (
+              <div className="overflow-y-auto flex-1">
+                <table className="w-full">
+                  <thead className="sticky top-0 bg-[#1E242D]">
+                    <tr className="border-b border-white/5">
+                      <th className="w-10 px-4 py-3" />
+                      <th className="text-left px-5 py-3 text-xs text-[#8B949E] uppercase tracking-wide font-medium">Naam</th>
+                      <th className="text-left px-5 py-3 text-xs text-[#8B949E] uppercase tracking-wide font-medium">Serienummer</th>
+                      <th className="text-left px-5 py-3 text-xs text-[#8B949E] uppercase tracking-wide font-medium">Model</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {availableTerminals.map(term => (
+                      <tr key={term.id} onClick={() => toggleSelect(term.id)}
+                        className={`border-b border-white/5 last:border-0 cursor-pointer transition-colors ${
+                          selectedIds.has(term.id) ? 'bg-[#C6FF3B]/5' : 'hover:bg-white/[0.02]'
+                        }`}>
+                        <td className="px-4 py-3">
+                          <input type="checkbox" checked={selectedIds.has(term.id)}
+                            onChange={() => toggleSelect(term.id)}
+                            onClick={e => e.stopPropagation()}
+                            className="accent-[#C6FF3B] w-4 h-4 cursor-pointer" />
+                        </td>
+                        <td className="px-5 py-3 text-sm font-medium text-white">{term.naam}</td>
+                        <td className="px-5 py-3 text-sm text-[#8B949E] font-mono">{term.serienummer || '—'}</td>
+                        <td className="px-5 py-3 text-sm text-[#8B949E]">{term.model || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <div className="px-6 py-4 border-t border-white/5 flex gap-3 items-center">
+              <button onClick={handleBulkAssign} disabled={assigning || selectedIds.size === 0}
+                className="bg-[#C6FF3B] text-[#0D1117] font-bold px-5 py-2.5 rounded-xl hover:bg-[#d4ff5a] transition-colors text-sm disabled:opacity-50">
+                {assigning ? 'Toewijzen...' : selectedIds.size > 0 ? `${selectedIds.size} terminal${selectedIds.size > 1 ? 's' : ''} toewijzen` : 'Selecteer terminals'}
+              </button>
+              <button onClick={() => setShowAssignModal(false)}
+                className="bg-white/5 text-white px-5 py-2.5 rounded-xl hover:bg-white/10 transition-colors text-sm">
+                Annuleren
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </>
