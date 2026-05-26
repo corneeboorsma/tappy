@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const cols = [
   { title: 'Product', links: ['Terminal', 'Payments', 'Insights', 'Integrations'] },
@@ -14,10 +15,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
-            <div className="text-xl font-bold mb-1">
-              <span className="text-white">tappy</span>
-              <span className="text-[#C6FF3B]">))</span>
-            </div>
+            <Image src="/images/tappy-logo-dark.png" alt="Tappy" width={80} height={23} className="mb-1" />
             <p className="text-xs text-[#8B949E] mb-4">Tap. Pay. Done.</p>
             <div className="flex gap-3 text-[#8B949E]">
               <Link href="#" className="hover:text-white transition-colors text-sm">ig</Link>
