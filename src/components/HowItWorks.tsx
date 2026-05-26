@@ -337,8 +337,8 @@ export default function HowItWorks() {
     if (t1.current) clearTimeout(t1.current);
     if (t2.current) clearTimeout(t2.current);
     setStep(0);
-    t1.current = setTimeout(() => setStep(1), 8000);
-    t2.current = setTimeout(() => setStep(2), 16000);
+    t1.current = setTimeout(() => setStep(1), 6000);
+    t2.current = setTimeout(() => setStep(2), 12000);
   }
 
   useEffect(() => {
