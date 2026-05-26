@@ -71,7 +71,7 @@ const nl: Translations = {
     standalone: {
       steps: [
         { n: '1', title: 'Bestellen per ronde.', desc: 'De groep bestelt meerdere rondes drinken. Geen kassakoppeling nodig — Tappy werkt zelfstandig.' },
-        { n: '2', title: 'Betalen onderweg.', desc: 'Na elke ronde tapt iedereen zijn deel direct op Tappy. Het saldo bouwt op op het apparaat.' },
+        { n: '2', title: 'Betalen naar gebruik.', desc: 'Na elke ronde tapt iedereen zijn deel direct op Tappy. Het saldo bouwt op op het apparaat.' },
         { n: '3', title: 'Afrekenen aan de bar.', desc: 'Eén gast neemt Tappy mee naar de kassa en betaalt de volledige rekening. Het saldo dat overblijft op Tappy wordt een fooi voor de zaak.' },
       ],
       label1: 'Groep bestelt meerdere rondes',

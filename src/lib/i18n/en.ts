@@ -69,7 +69,7 @@ const en = {
     standalone: {
       steps: [
         { n: '1', title: 'Order by the round.', desc: 'The group orders multiple rounds of drinks. No POS connection needed — Tappy works independently.' },
-        { n: '2', title: 'Pay as you go.', desc: 'After each round, everyone taps their share directly on Tappy. The balance builds up on the device.' },
+        { n: '2', title: 'Pay per round.', desc: 'After each round, everyone taps their share directly on Tappy. The balance builds up on the device.' },
         { n: '3', title: 'Settle at the bar.', desc: 'One guest takes Tappy to the cashier and pays the full bill. Any balance left on Tappy becomes a tip for the venue.' },
       ],
       label1: 'Group orders multiple rounds',
