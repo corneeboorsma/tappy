@@ -346,8 +346,8 @@ export default function KlantDetailPage() {
                       value={newPassword}
                       onChange={e => setNewPassword(e.target.value)}
                       required
-                      minLength={6}
-                      placeholder="Minimaal 6 tekens"
+                      minLength={12}
+                      placeholder="Minimaal 12 tekens"
                       className="w-full bg-[#0D1117] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#C6FF3B]/50 transition-colors"
                     />
                   </div>
@@ -388,8 +388,8 @@ export default function KlantDetailPage() {
                     value={loginPassword}
                     onChange={e => setLoginPassword(e.target.value)}
                     required
-                    minLength={6}
-                    placeholder="Tijdelijk wachtwoord"
+                    minLength={12}
+                    placeholder="Tijdelijk wachtwoord (min. 12 tekens)"
                     className="w-full bg-[#0D1117] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#C6FF3B]/50 transition-colors"
                   />
                 </div>

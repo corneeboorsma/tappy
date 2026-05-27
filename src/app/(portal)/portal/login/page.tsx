@@ -34,16 +34,10 @@ export default function LoginPage() {
       }
     } catch (err: unknown) {
       const code = (err as { code?: string })?.code;
-      if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
-        setError('Ongeldig e-mailadres of wachtwoord.');
-      } else if (code === 'auth/invalid-api-key') {
-        setError('Configuratiefout: Firebase API key ontbreekt.');
-      } else if (code === 'auth/operation-not-allowed') {
-        setError('E-mail/wachtwoord login is niet ingeschakeld in Firebase Console.');
-      } else if (code === 'auth/network-request-failed') {
+      if (code === 'auth/network-request-failed') {
         setError('Netwerkfout. Controleer je verbinding.');
       } else {
-        setError(`Fout: ${code ?? 'onbekend'}`);
+        setError('Ongeldige inloggegevens.');
       }
     } finally {
       setLoading(false);

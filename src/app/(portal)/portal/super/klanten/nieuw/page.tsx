@@ -156,7 +156,7 @@ export default function NieuweKlantPage() {
           <p className="text-xs text-[#8B949E] mb-5">Deze gegevens geef je door aan de klant om in te loggen op het portal.</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Field label="E-mailadres" type="email" value={form.loginEmail} onChange={v => set('loginEmail', v)} required />
-            <Field label="Tijdelijk wachtwoord" value={form.loginWachtwoord} onChange={v => set('loginWachtwoord', v)} required placeholder="Min. 8 tekens" />
+            <Field label="Tijdelijk wachtwoord" value={form.loginWachtwoord} onChange={v => set('loginWachtwoord', v)} required placeholder="Min. 12 tekens" minLength={12} />
           </div>
         </section>
 
@@ -177,9 +177,9 @@ export default function NieuweKlantPage() {
   );
 }
 
-function Field({ label, value, onChange, type = 'text', required = false, placeholder = '' }: {
+function Field({ label, value, onChange, type = 'text', required = false, placeholder = '', minLength }: {
   label: string; value: string; onChange: (v: string) => void;
-  type?: string; required?: boolean; placeholder?: string;
+  type?: string; required?: boolean; placeholder?: string; minLength?: number;
 }) {
   return (
     <div>
@@ -190,6 +190,7 @@ function Field({ label, value, onChange, type = 'text', required = false, placeh
         onChange={e => onChange(e.target.value)}
         required={required}
         placeholder={placeholder}
+        minLength={minLength}
         className="w-full bg-[#0D1117] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#C6FF3B]/50 transition-colors"
       />
     </div>
