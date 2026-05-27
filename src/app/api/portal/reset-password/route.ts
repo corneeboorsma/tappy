@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { adminAuth } from '@/lib/firebase/admin';
+import { getSessionRole } from '@/lib/portal/requireRole';
 
 export async function POST(req: NextRequest) {
+  const sessionUid = req.cookies.get('tappy-session')?.value;
+  const role = await getSessionRole(sessionUid);
+  if (role !== 'super_admin') {
+    return NextResponse.json({ error: 'Niet bevoegd' }, { status: 403 });
+  }
+
   try {
     const { uid, password } = await req.json();
     if (!uid || !password) {

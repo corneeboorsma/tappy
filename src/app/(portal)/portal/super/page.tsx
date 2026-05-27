@@ -1,9 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import PortalHeader from '@/components/portal/PortalHeader';
 import DataTable from '@/components/portal/DataTable';
 import { getTenants, type Tenant } from '@/lib/firebase/firestore';
+import { useAuth } from '@/lib/portal/AuthContext';
 
 function getCity(adres: string) {
   const parts = adres.split(',');
@@ -17,12 +19,24 @@ function getCity(adres: string) {
 }
 
 export default function SuperDashboard() {
+  const { role, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getTenants().then(data => { setTenants(data); setLoading(false); });
-  }, []);
+    if (!authLoading && role !== 'super_admin') {
+      router.replace('/portal/dashboard');
+    }
+  }, [role, authLoading, router]);
+
+  useEffect(() => {
+    if (role === 'super_admin') {
+      getTenants().then(data => { setTenants(data); setLoading(false); });
+    }
+  }, [role]);
+
+  if (authLoading || role !== 'super_admin') return null;
 
   return (
     <>

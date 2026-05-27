@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default: deny everything
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Users: alleen eigen document lezen
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Tenants: alleen lezen als je de bijbehorende admin bent
+    match /tenants/{tenantId} {
+      allow read: if request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tenantId == tenantId;
+      allow write: if false;
+    }
+
+    // Terminals per tenant: zelfde tenant-check
+    match /tenants/{tenantId}/terminals/{terminalId} {
+      allow read: if request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tenantId == tenantId;
+      allow write: if false;
+    }
+
+    // Transacties per tenant: zelfde tenant-check
+    match /tenants/{tenantId}/transactions/{transactionId} {
+      allow read: if request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.tenantId == tenantId;
+      allow write: if false;
+    }
+  }
+}

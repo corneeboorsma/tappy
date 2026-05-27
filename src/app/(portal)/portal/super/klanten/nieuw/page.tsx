@@ -1,10 +1,12 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase/client';
 import { createTenant, createPortalUser } from '@/lib/firebase/firestore';
 import PortalHeader from '@/components/portal/PortalHeader';
 import Link from 'next/link';
+import { useAuth } from '@/lib/portal/AuthContext';
 
 interface FormData {
   bedrijfsnaam: string;
@@ -29,10 +31,20 @@ const empty: FormData = {
 };
 
 export default function NieuweKlantPage() {
+  const { role, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [form, setForm] = useState<FormData>(empty);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  useEffect(() => {
+    if (!authLoading && role !== 'super_admin') {
+      router.replace('/portal/dashboard');
+    }
+  }, [role, authLoading, router]);
+
+  if (authLoading || role !== 'super_admin') return null;
 
   function set(field: keyof FormData, value: string) {
     setForm(prev => ({ ...prev, [field]: value }));

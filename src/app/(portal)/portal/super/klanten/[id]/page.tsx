@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import PortalHeader from '@/components/portal/PortalHeader';
 import DataTable from '@/components/portal/DataTable';
@@ -10,11 +10,14 @@ import {
   getPortalUserByTenantId,
   type Tenant, type GlobalTerminal, type PortalUser,
 } from '@/lib/firebase/firestore';
+import { useAuth } from '@/lib/portal/AuthContext';
 
 type Tab = 'gegevens' | 'terminals' | 'omzet' | 'login';
 
 export default function KlantDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const { role, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [tab, setTab] = useState<Tab>('gegevens');
   const [tenant, setTenant] = useState<Tenant | null>(null);
   const [allTerminals, setAllTerminals] = useState<GlobalTerminal[]>([]);
@@ -62,6 +65,14 @@ export default function KlantDetailPage() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { load(); }, [id]);
+
+  useEffect(() => {
+    if (!authLoading && role !== 'super_admin') {
+      router.replace('/portal/dashboard');
+    }
+  }, [role, authLoading, router]);
+
+  if (authLoading || role !== 'super_admin') return null;
 
   const assignedTerminals = allTerminals.filter(t => t.tenantId === id);
   const availableTerminals = allTerminals.filter(t => !t.tenantId);
