@@ -41,6 +41,7 @@ export default function KlantDetailPage() {
   const [resetMsg, setResetMsg] = useState<{ type: 'ok' | 'err'; text: string } | null>(null);
   const [userDisabled, setUserDisabled] = useState<boolean | null>(null);
   const [toggleSaving, setToggleSaving] = useState(false);
+  const [assignFilter, setAssignFilter] = useState('');
 
   async function load() {
     const [t, terms, pu] = await Promise.all([
@@ -101,8 +102,6 @@ export default function KlantDetailPage() {
     await assignTerminal(terminalId, null);
     await load();
   }
-
-  const [assignFilter, setAssignFilter] = useState('');
 
   async function handleBulkAssign() {
     if (selectedIds.size === 0) return;
