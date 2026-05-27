@@ -7,6 +7,16 @@ import DataTable from '@/components/portal/DataTable';
 import { getTenants, type Tenant } from '@/lib/firebase/firestore';
 import { useAuth } from '@/lib/portal/AuthContext';
 
+function maskIban(iban: string) {
+  if (!iban || iban.length < 8) return iban;
+  return iban.slice(0, 4) + '****' + iban.slice(-4);
+}
+
+function maskKvk(kvk: string) {
+  if (!kvk || kvk.length < 4) return kvk;
+  return '****' + kvk.slice(-4);
+}
+
 function getCity(adres: string) {
   const parts = adres.split(',');
   if (parts.length >= 2) {
@@ -84,8 +94,8 @@ export default function SuperDashboard() {
             if (key === 'plaats') return <span className="text-[#8B949E]">{getCity(tenant.adres)}</span>;
             if (key === 'contactNaam') return <span className="text-white">{tenant.contactNaam}</span>;
             if (key === 'contactEmail') return <span className="text-[#8B949E]">{tenant.contactEmail}</span>;
-            if (key === 'kvk') return <span className="text-[#8B949E]">{tenant.kvk}</span>;
-            if (key === 'iban') return <span className="text-[#8B949E]">{tenant.iban}</span>;
+            if (key === 'kvk') return <span className="text-[#8B949E] font-mono">{maskKvk(tenant.kvk)}</span>;
+            if (key === 'iban') return <span className="text-[#8B949E] font-mono">{maskIban(tenant.iban)}</span>;
             if (key === 'status') return (
               <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
                 tenant.status === 'active'
